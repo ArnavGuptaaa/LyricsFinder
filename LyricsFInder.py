@@ -10,6 +10,7 @@ src = requests.get(url, headers=headers).text
 soup = BeautifulSoup(src, 'lxml')
 
 links = []
+flag = 1
 
 for div in soup.findAll('div', class_='rc'):
     contentBox = div.find('div', class_='r')
@@ -18,18 +19,23 @@ for div in soup.findAll('div', class_='rc'):
     except AttributeError:
         pass
 
+if len(links) == 0:
+    print('Song Not Found')
+    quit()
+
 for link in links:
     if 'https://www.azlyrics.com/lyrics' in link:
-        try:
-            src2 = requests.get(link).text
-            soup2 = BeautifulSoup(src2, 'lxml')
+        src2 = requests.get(link).text
+        soup2 = BeautifulSoup(src2, 'lxml')
 
-            divs = soup2.findAll('div', class_=None)
+        divs = soup2.findAll('div', class_=None)
 
-            for div in divs:
-                print(div.text.strip())
+        for div in divs:
+            print(div.text.strip())
 
-            print(f'Lyrics Url : {link}')
+        print(f'Lyrics Url : {link}')
 
-        except NameError:
-            print("Song Not Found")
+        flag = 0
+
+if flag == 1:
+    print('Song Not Found In AZLyrics')
